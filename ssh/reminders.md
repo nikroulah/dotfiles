@@ -1,0 +1,1 @@
+- `cat ~/.ssh/id_ed25519.pub | pbcopy`, then paste at https://github.com/settings/keys → `New SSH key` ([docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)).

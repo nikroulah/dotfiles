@@ -1,0 +1,29 @@
+# MacOS
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Environments
+.env
+.env.local
+.env.dev
+.venv
+env/
+venv/
+
+# Type checkers
+.pyre/
+.pytype/
+
+# Linters
+.ruff_cache
+
+node_modules/
+

@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+#
+# dot — refresh the dotfiles environment on an already-bootstrapped machine.
+# By default runs all four steps in order: symlink, macos defaults, brew
+# update/upgrade, and the topic installers (+ reminders). Flags let you run
+# or skip individual steps.
+
+set -e
+
+DOTFILES="$(cd "$(dirname "$(readlink "$0" || echo "$0")")/.." && pwd -P)"
+
+usage() {
+  cat <<'EOF'
+usage: dot [options]
+
+With no options, runs every step in order:
+  1. symlink   regenerate ~/.* symlinks (script/symlink)
+  2. macos     apply macos defaults (macos/set-defaults.sh)
+  3. brew      brew update && brew upgrade (skipped if brew isn't installed)
+  4. install   run every topic install.sh, then print reminders (script/install)
+
+Run only some steps (combine to run a subset):
+  --sym-only       only step 1
+  --macos-only     only step 2
+  --brew-only      only step 3
+  --install-only   only step 4
+
+Skip individual steps:
+  --skip-sym       skip step 1
+  --skip-macos     skip step 2
+  --skip-brew      skip step 3
+  --skip-install   skip step 4
+
+Other:
+  -e, --edit       open the dotfiles dir in $EDITOR and exit
+  -h, --help       show this help and exit
+EOF
+}
+
+# all steps on by default; the first --*-only flips to opt-in
+do_sym=true do_macos=true do_brew=true do_install=true
+only_mode=false
+
+enable_only() {
+  if [ "$only_mode" = false ]; then
+    do_sym=false do_macos=false do_brew=false do_install=false
+    only_mode=true
+  fi
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -e|--edit)      exec "${EDITOR:-vim}" "$DOTFILES" ;;
+    -h|--help)      usage; exit 0 ;;
+    --sym-only)     enable_only; do_sym=true ;;
+    --macos-only)   enable_only; do_macos=true ;;
+    --brew-only)    enable_only; do_brew=true ;;
+    --install-only) enable_only; do_install=true ;;
+    --skip-sym)     do_sym=false ;;
+    --skip-macos)   do_macos=false ;;
+    --skip-brew)    do_brew=false ;;
+    --skip-install) do_install=false ;;
+    *)              echo "dot: unknown option '$1'" >&2; echo >&2; usage >&2; exit 1 ;;
+  esac
+  shift
+done
+
+[ "$do_sym" = true ]   && "$DOTFILES/script/symlink"
+[ "$do_macos" = true ] && "$DOTFILES/macos/set-defaults.sh"
+
+# on a fresh machine brew doesn't exist yet — script/install installs it
+if [ "$do_brew" = true ] && command -v brew &>/dev/null; then
+  brew update
+  brew upgrade
+fi
+
+[ "$do_install" = true ] && "$DOTFILES/script/install"
+
+exit 0

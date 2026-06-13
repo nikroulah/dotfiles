@@ -1,0 +1,10 @@
+[include]
+	path = ~/.gitconfig.local
+[push]
+	autoSetupRemote = true
+[init]
+	defaultBranch = main
+[credential]
+	helper = store
+[alias]
+	lol = log --graph --oneline --decorate --color --branches origin/main

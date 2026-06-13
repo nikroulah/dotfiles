@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# reminders — print every topic's reminders.md (the manual steps that
+# can't be scripted). Run automatically at the end of script/install.
+
+cd "$(dirname "$0")/.."
+
+echo "manual steps remaining:"
+echo ""
+for f in */reminders.md; do
+  [ -e "$f" ] || continue
+  printf "\033[1m== %s ==\033[0m\n" "${f%%/*}"
+  cat "$f"
+  echo ""
+done

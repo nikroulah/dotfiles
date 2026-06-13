@@ -1,0 +1,3 @@
+- Open Mouseless/Rectangle, grant Accessibility permission, add as login item.
+- Log into 1pass/dropbox/parsec/mouseless
+- Work machines: run `brew install --cask docker-desktop slack postman`; launch Docker Desktop once to finish setup

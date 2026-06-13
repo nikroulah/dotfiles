@@ -1,0 +1,2 @@
+- Ghostty renders bobthefish glyphs out of the box. On any other terminal: `brew install --cask font-meslo-lg-nerd-font` and set it as the terminal font (other alternatives at https://github.com/ryanoasis/nerd-fonts) .
+- Optional, for extra glyphs if the font supports them: `set -U theme_nerd_fonts yes`

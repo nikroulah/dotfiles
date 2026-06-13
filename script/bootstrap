@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# bootstrap — first-time setup for a new machine.
+# Installs Xcode CLT, sets up git identity, and symlinks all */*.symlink
+# files into $HOME (via script/symlink). Safe to re-run; prompts before
+# touching existing files.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+info()    { printf "\r  [ \033[00;34m..\033[0m ] %s\n" "$1"; }
+user()    { printf "\r  [ \033[0;33m??\033[0m ] %s\n" "$1"; }
+success() { printf "\r\033[2K  [ \033[00;32mOK\033[0m ] %s\n" "$1"; }
+
+setup_xcode_clt() {
+  if ! xcode-select -p &>/dev/null; then
+    info "installing Xcode Command Line Tools (pop-up — click Install)"
+    xcode-select --install
+    user "press enter once the CLT install finishes"
+    read -r
+  fi
+  success "Xcode Command Line Tools"
+}
+
+setup_gitconfig() {
+  # machine-local git identity lives in ~/.gitconfig.local (not in this repo),
+  # so the same dotfiles work on personal and work machines
+  if [ ! -f "$HOME/.gitconfig.local" ]; then
+    user "git author name?"
+    read -r -e git_authorname
+    user "git author email? (work email on work machines)"
+    read -r -e git_authoremail
+    printf "[user]\n\tname = %s\n\temail = %s\n" "$git_authorname" "$git_authoremail" > "$HOME/.gitconfig.local"
+  fi
+  success "gitconfig.local"
+}
+
+setup_xcode_clt
+setup_gitconfig
+script/symlink
+
+echo ""
+echo "  bootstrapped! next: bin/dot"

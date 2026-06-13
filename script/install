@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#
+# install — run every topic's install.sh, then echo per-topic reminders.
+# Homebrew goes first since everything else depends on it.
+#
+# macos/set-defaults.sh is run by bin/dot, not here.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "› homebrew/install.sh"
+homebrew/install.sh
+
+# shellcheck disable=SC2044
+for installer in $(find . -maxdepth 2 -name install.sh -not -path './homebrew/*' | sort); do
+  echo "› ${installer#./}"
+  "$installer"
+done
+
+# after all installers, so newly installed tools' man pages are included
+echo "› fish_update_completions"
+/opt/homebrew/bin/fish -c "fish_update_completions"
+
+echo ""
+script/reminders

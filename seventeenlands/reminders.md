@@ -1,0 +1,1 @@
+- start automatically on login: `brew services start rconroy293/seventeenlands/seventeenlands`.
