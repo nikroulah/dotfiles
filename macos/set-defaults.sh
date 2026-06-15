@@ -23,6 +23,9 @@ defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 # Use 24-hour time
 defaults write NSGlobalDomain AppleICUForce24HourTime -bool true
 
+# Use Celsius for temperature
+defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"
+
 # Expand save panel by default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
